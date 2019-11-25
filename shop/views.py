@@ -1,7 +1,10 @@
+from shop.forms import UserForm
+from django.views import generic
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, auth
-from .models import Product, Contact,Category,Product,Order, OrderItem
+from .models import Product, Contact, Category, Product, Order, OrderItem
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
 from math import ceil
@@ -13,17 +16,15 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
-from django.urls import reverse_lazy
-from django.views import generic
-from django.urls import reverse_lazy
-from shop.forms import UserForm
+
+
 class SignUp(generic.CreateView):
     form_class = UserForm
     success_url = reverse_lazy('login')
     template_name = 'shop/signup.html'
 
 
-def index(request,category_slug=None):
+def index(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
@@ -68,6 +69,7 @@ def index(request,category_slug=None):
                 'products': products,
             }
         )
+
 
 def searchMatch(query, item):
     '''return true only if query matches the item'''
@@ -123,9 +125,20 @@ def tracker(request):
                 update = OrderUpdate.objects.filter(order_id=orderId)
                 updates = []
                 for item in update:
-                    updates.append({'text': item.update_desc, 'time': item.timestamp})
-                    response = json.dumps({"status": "success", "updates": updates, "itemsJson": order[0].items_json},
-                                          default=str)
+                    updates.append(
+                        {
+                            'text': item.update_desc,
+                            'time': item.timestamp
+                        }
+                    )
+                    response = json.dumps(
+                        {
+                            "status": "success",
+                            "updates": updates,
+                            "itemsJson": order[0].items_json
+                        },
+                        default=str
+                    )
                 return HttpResponse(response)
             else:
                 return HttpResponse('{"status":"noitem"}')
@@ -147,15 +160,19 @@ def checkout(request):
         name = request.POST.get('name', '')
         amount = request.POST.get('amount', '')
         email = request.POST.get('email', '')
-        address = request.POST.get('address1', '') + " " + request.POST.get('address2', '')
+        address = request.POST.get('address1', '') + \
+            " " + request.POST.get('address2', '')
         city = request.POST.get('city', '')
         state = request.POST.get('state', '')
         zip_code = request.POST.get('zip_code', '')
         phone = request.POST.get('phone', '')
         order = Order(items_json=items_json, name=name, email=email, address=address, city=city,
-                       state=state, zip_code=zip_code, phone=phone, amount=amount)
+                      state=state, zip_code=zip_code, phone=phone, amount=amount)
         order.save()
-        update = OrderUpdate(order_id=order.order_id, update_desc="The order has been placed")
+        update = OrderUpdate(
+            order_id=order.order_id,
+            update_desc="The order has been placed"
+        )
         update.save()
         thank = True
         id = order.order_id
@@ -179,58 +196,25 @@ def checkout(request):
     return render(request, 'shop/checkout.html')
 
 
-
-@ensure_csrf_cookie
-def login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        try:
-            customer = get_object_or_404(Customer, email=email)
-            print(customer)
-            if customer.check_password(password):
-                request.session['id'] = email
-                request.session['type'] = 'customer'
-                return redirect(index)
-            else:
-                messages.error(request, 'Password Incorrect')
-                return redirect(index)
-        except:
-
-            try:
-                vendor = get_object_or_404(Vendor, email=email)
-                if vendor.check_password(password):
-                    print(vendor.name)
-                    if vendor.is_authorized:
-                        print("Authorized")
-                        request.session['id'] = email
-                        request.session['type'] = ' vendor'
-                        return redirect('/')
-                    else:
-                        messages.error(request, '  Vendor not Approved')
-                        return redirect('/')
-                else:
-                    messages.error(request, 'Password Incorrect')
-                    return redirect('/')
-            except Exception as e:
-                messages.error(request, 'No Customer or Vendor is registered with this email')
-                print(e)
-                return redirect('/')
-    else:
-        return render(request, "shop/login.html")
-
-def logout(request):
-    try:
-        del request.session['id']
-        del request.session['type']
-        request.session.modified = True
-    except KeyError:
-        pass
-    return render(request, 'shop/login.html')
-
-
 def signup(request):
-   pass
+
+    user = request.user
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+                student = form.save(commit=False)
+                # commit=False tells Django that "Don't send this to database yet.
+                # I have more things I want to do with it."
+
+                student.user = request.user  # Set the user object here
+                student.save()  # Now you can send it to DB
+
+                return render_to_response("registration/complete.html", RequestContext(request))
+    else:
+        form = UserForm()
+    return render(request, 'shop/login.html',)
+
+
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here
@@ -248,6 +232,7 @@ def handlerequest(request):
     #     else:
     #         print('order was not successful because' + response_dict['RESPMSG'])
     return render(request, 'shop/paymentstatus.html', {'response': response_dict})
+
 
 def vendor(request):
     vendor = Vendor.objects.get(email=request.session['id'])
