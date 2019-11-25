@@ -222,31 +222,7 @@ def logout(request):
 
 
 def signup(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        usertype = request.POST.get('usertype')
-        if usertype == 'customer':
-            user = Customer(name=name, email=email)
-            user.set_password(user.make_password(password2))
-            user.save()
-            request.session['id'] = email
-            request.session['type'] = 'customer'
-        elif usertype == 'vendor':
-            user = Vendor(name=name, email=email, is_authorized=False)
-            user.set_password(user.make_password(password2))
-            user.save()
-            request.session['id'] = email
-            request.session['type'] = 'vendor'
-            messages.error(request, 'Vendor not Approved')
-        return render(request, "shop/signup.html")
-
-    else:
-        return render(request, "shop/signup.html")
-
+   pass
 @csrf_exempt
 def handlerequest(request):
     # paytm will send you post request here

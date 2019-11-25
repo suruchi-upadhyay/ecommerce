@@ -4,13 +4,12 @@
 {% block body %}
 <div class="container my-3">
     <h4>LOGIN</h4>
-    <form action="/shop/login/" method="post">{% csrf_token %}
-         Email:<br>
-         <input type="email" name="email" placeholder="Email"><br>
-        Password:<br>
-         <input type="password" name="password1" placeholder="Password"><br><br>
-
-        <button type="submit" class="btn btn-success">Submit</button>
+    <form method="post">
+            {% csrf_token %}
+  
+  {{ form.as_p }}
+  <button class="btn btn-success" type="submit">Login</button>
+</form>
 
  </form>
 

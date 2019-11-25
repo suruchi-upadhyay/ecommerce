@@ -43,7 +43,7 @@ padding-right: 0;
 {% load static %}
 <div class="container">
     <!--Slideshow starts here -->
-    {% for product in products %}
+    
     <h5 class="my-4">Flash Sale On {{products.0.category}} - Recommended Items</h5>
     <div class="row">
         <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
@@ -63,13 +63,13 @@ padding-right: 0;
                             <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="card-img-top img-fluid">  
 
                             <div class="card-body">
-                                <h5 class="card-title" id="namepr{{i.id}}">{{product.name}}</h5>
+                                <h5 class="card-title" id="namepr{{product.id}}">{{product.name}}</h5>
                                 <p class="card-text">{{product.description|slice:"0:53"}}...</p>
                                 <h6 class="card-title" >Price: <span id="pricepr{{product.id}}">{{product.price}}</span></h6>
-                                <span id="divpr{{i.id}}" class="divpr">
-                                    <button id="pr{{i.id}}" class="btn btn-primary cart">Add To Cart</button>
+                                <span id="divpr{{product.id}}" class="divpr">
+                                    <button id="pr{{product.id}}" class="btn btn-primary cart">Add To Cart</button>
                                 </span>
-                                <a href="/shop/products/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary cart">QuickView</button></a>
+                                <a href="/shop/products/{{product.id}}"><button id="qv{{product.id}}" class="btn btn-primary cart">QuickView</button></a>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@ padding-right: 0;
             <span class="carousel-control-next-icon"></span>
         </a>
     </div>
-    {% endfor %}
+    
 </div>
 {% endblock %}
 {% block js %}

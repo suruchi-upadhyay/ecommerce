@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
+
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path("", views.index, name="ShopHome"),
@@ -8,9 +10,12 @@ urlpatterns = [
     path("contact/", views.contact, name="ContactUs"),
     path("tracker/", views.tracker, name="TrackingStatus"),
     path("search/", views.search, name="Search"),
-    path("login/", views.login, name="Login"),
-    path("logout",views.logout, name='logout'),
+    path('login/', LoginView.as_view(template_name="shop/login.html"), name="login"),
+
+    path("logout",LogoutView.as_view(), name='logout'),
     path("signup/", views.signup, name="SignUp"),
+    
+
     path("products/<int:myid>", views.productView, name="ProductView"),
     path("checkout/", views.checkout, name="Checkout"),
     path("handlerequest/", views.handlerequest, name="HandleRequest"),
