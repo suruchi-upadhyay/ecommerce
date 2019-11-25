@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, auth
-from .models import Product, Contact, Orders, OrderUpdate, Customer, Vendor
+from .models import Product, Contact, Order, OrderItem
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
 from math import ceil
@@ -76,7 +76,7 @@ def tracker(request):
         orderId = request.POST.get('orderId', '')
         email = request.POST.get('email', '')
         try:
-            order = Orders.objects.filter(order_id=orderId, email=email)
+            order = Order.objects.filter(order_id=orderId, email=email)
             if len(order) > 0:
                 update = OrderUpdate.objects.filter(order_id=orderId)
                 updates = []
@@ -110,7 +110,7 @@ def checkout(request):
         state = request.POST.get('state', '')
         zip_code = request.POST.get('zip_code', '')
         phone = request.POST.get('phone', '')
-        order = Orders(items_json=items_json, name=name, email=email, address=address, city=city,
+        order = Order(items_json=items_json, name=name, email=email, address=address, city=city,
                        state=state, zip_code=zip_code, phone=phone, amount=amount)
         order.save()
         update = OrderUpdate(order_id=order.order_id, update_desc="The order has been placed")
