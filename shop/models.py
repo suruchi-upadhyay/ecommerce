@@ -32,12 +32,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    linkedin_url = models.URLField(null=True, blank=True)
-    twitter_url = models.URLField(null=True, blank=True)
-    blog_url = models.URLField(null=True, blank=True)
+    
     bio = models.TextField(max_length=500, blank=True, null=True)
-    location = models.CharField(max_length=30, blank=True, null=True)
-
+    
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

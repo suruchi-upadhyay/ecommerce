@@ -13,7 +13,9 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name="shop/login.html"), name="login"),
 
     path("logout",LogoutView.as_view(), name='logout'),
-    path("signup/", views.signup, name="SignUp"),
+    # path("signup/", views.signup, name="SignUp"),
+    path('signup/', views.SignUp.as_view(), name='SignUp'),
+
     
 
     path("products/<int:myid>", views.productView, name="ProductView"),

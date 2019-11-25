@@ -13,6 +13,14 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
+from django.urls import reverse_lazy
+from django.views import generic
+from django.urls import reverse_lazy
+from shop.forms import UserForm
+class SignUp(generic.CreateView):
+    form_class = UserForm
+    success_url = reverse_lazy('login')
+    template_name = 'shop/signup.html'
 
 
 def index(request,category_slug=None):
