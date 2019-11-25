@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WorldShop</title>
+</head>
+<body>
+<div class="container my-3">
+    <h4>Update Product</h4>
+    <form action="/shop/prodView/" method="post">{% csrf_token %}
+        Product Id:<br>
+         <input type="text" name="product_id" placeholder="Product ID"><br>
+        Product Name:<br>
+         <input type="text" name="product_name" placeholder="Product Name"><br>
+        Category:<br>
+         <input type="text" name="category" placeholder="Category"><br>
+        Subcategory:<br>
+         <input type="text" name="subcategory" placeholder="Subcategory"><br>
+         Price:<br>
+         <input type="number" name=" price" placeholder="Price"><br>
+       Desc:<br>
+         <input type="text" name="desc" placeholder="Desc"><br>
+         Image:<br>
+         <input type="text" name=" pub_date" placeholder=" Pub date"><br>
+
+        <br>
+
+
+        <button type="submit" class="btn btn-success">Submit</button>
+
+</form>
+
+
+
+</div>
+
+</body>
+</html>
