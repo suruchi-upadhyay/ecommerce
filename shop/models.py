@@ -114,6 +114,8 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
+    name = models.CharField(max_length=100, default='')
+    email = models.EmailField(max_length=100, default='')
 
     class Meta:
         ordering = ('-created',)

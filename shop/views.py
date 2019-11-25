@@ -17,13 +17,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
 
-
-# class SignUp(generic.CreateView):
-#     form_class = UserForm
-#     success_url = reverse_lazy('login')
-#     template_name = 'shop/signup.html'
-
-
 def index(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -69,7 +62,6 @@ def index(request, category_slug=None):
                 'products': products,
             }
         )
-
 
 def searchMatch(query, item):
     '''return true only if query matches the item'''
@@ -172,23 +164,24 @@ def checkout(request):
         zip_code = request.POST.get('zip_code', '')
         phone = request.POST.get('phone', '')
         order = Order(
-            items_json=items_json,
+
             name=name, email=email,
-            address=address, city=city,
+            address=address,
             state=state,
-            zip_code=zip_code,
-            phone=phone,
-            amount=amount
+            # zip_code=zip_code,
+            # phone=phone,
+            # amount=amount
         )
         order.save()
-        update = OrderUpdate(
-            order_id=order.order_id,
-            update_desc="The order has been placed"
+        order_item = OrderItem(
+            order=order,
+            price=amount,
+            product_id=1,
         )
-        update.save()
+        order_item.save()
         thank = True
-        id = order.order_id
-        # return render(request, 'shop/checkout.html', {'thank':thank, 'id': id})
+        # id = order.order_id
+        return render(request, 'shop/checkout.html', {'thank':thank, 'id': order.id})
         # Request paytm to transfer the amount to your account after payment by user
         param_dict = {
 
@@ -203,7 +196,7 @@ def checkout(request):
 
         }
         # param_dict['CHECKSUMHASH'] = checksum.generate_checksum(param_dict, MERCHANT_KEY)
-        # return render(request, 'shop/paytm.html', {'param_dict': param_dict})
+        # return render(request, '/paytm.html', {'param_dict': param_dict})
 
     return render(request, 'shop/checkout.html')
 
@@ -270,17 +263,8 @@ def handlerequest(request):
 
 
 def vendor(request):
-    vendor = Vendor.objects.get(email=request.session['id'])
-    product_name = Product.objects.all()
+    user =User.objects.get(id=request.user.id)
+    
     menu = {}
-    for fi in product_name:
-        if fi.resid == vendor:
-            try:
-                menu[fi.cuisine].append(fi)
-            except KeyError:
-                menu[fi.cuisine] = [fi]
-        context = {
-            'product': restaurant,
-            'menu': menu
-        }
-    return render(request, 'foodspark/restprofile.html', context)
+    
+    return render(request, 'foodspark/restprofile.html', {'user':user})
