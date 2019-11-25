@@ -4,45 +4,21 @@
 {% block body %}
 <div class="container my-3">
     <h4>SIGNUP</h4>
-    <form action="/shop/signup/" method="post">{% csrf_token %}
-        Name:<br>
-         <input type="text" name="name" placeholder="Name"><br>
-        Email:<br>
-         <input type="email" name="email" placeholder="Email"><br>
-        Mobile Number:<br>
-         <input type="number" name="mobile" placeholder="Mobile"><br>
-        User:<br>
-        <select name="usertype">
-  <option value="customer">Customer</option>
-  <option value="vendor">Vendor</option>
-</select>
-        <br>
-        Username:<br>
-         <input type="text" name="username" placeholder="Username"><br>
-        Password:<br>
-         <input type="password" name="password1" placeholder="Password"><br>
-        Confirm password:<br>
-         <input type="password" name="password2" placeholder="Confirm Password"><br><br>
+   
 
+    {% csrf_token %}
+    {{ form.as_p }}
 
-        <button type="submit" class="btn btn-success">Submit</button>
+    <p> if you want to create vendor account go ahead we will contact you and will give you permission </p>
+
+    <button type="submit" class="btn btn-success">Sign up</button>
 
 </form>
-
-
 
 </div>
 
 
 
-
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Sign up</button>
-
-  </form>
 
 
 {% endblock %}

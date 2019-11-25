@@ -1,12 +1,16 @@
 {% extends 'shop/basic.html' %}
+{% load staticfiles %}
 
-{% block title%} {{product.product_name}} - WorldShop{% endblock %}
+{% block title%} {{product.name}} - WorldShop{% endblock %}
 {% block body %}
 <div class="container my-4">
     <div class="row">
     <div class="col-md-4">
     <div class="row">
-        <img src="/media/{{product.image}}" width="233px" height="385px">
+        
+
+        <img width="233px" height="385px" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="">  
+
     </div>
         <div class="row">
             <button class="btn btn-primary mx-3">Buy Now</button>
@@ -22,9 +26,9 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
     </div>
 
     <div class="col-md-8">
-        <h5>{{product.product_name}}</h5>
+        <h5>{{product.name}}</h5>
         <p><b>Rs.{{product.price}} </b></p>
-        <p>{{product.desc}}</p>
+        <p>{{product.description}}</p>
 
 
     </div>

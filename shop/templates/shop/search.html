@@ -69,7 +69,7 @@ padding-right: 0;
                                 <span id="divpr{{i.id}}" class="divpr">
                                     <button id="pr{{i.id}}" class="btn btn-primary cart">Add To Cart</button>
                                 </span>
-                                <a href="/shop/products/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary cart">QuickView</button></a>
+                                <a href="/products/{{i.id}}"><button id="qv{{i.id}}" class="btn btn-primary cart">QuickView</button></a>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ function updatePopover(cart) {
         popStr = popStr + document.getElementById('name' + item).innerHTML.slice(0, 19) + "... Qty: " + cart[item][0] + '<br>';
         i = i + 1;
     }
-    popStr = popStr + "</div> <a href='/shop/checkout'><button class='btn btn-primary' id ='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id ='clearCart'>Clear Cart</button>     "
+    popStr = popStr + "</div> <a href='/checkout'><button class='btn btn-primary' id ='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id ='clearCart'>Clear Cart</button>     "
     console.log(popStr);
     document.getElementById('popcart').setAttribute('data-content', popStr);
     $('#popcart').popover('show');

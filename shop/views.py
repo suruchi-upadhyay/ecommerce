@@ -18,10 +18,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
 
 
-class SignUp(generic.CreateView):
-    form_class = UserForm
-    success_url = reverse_lazy('login')
-    template_name = 'shop/signup.html'
+# class SignUp(generic.CreateView):
+#     form_class = UserForm
+#     success_url = reverse_lazy('login')
+#     template_name = 'shop/signup.html'
 
 
 def index(request, category_slug=None):
@@ -73,7 +73,7 @@ def index(request, category_slug=None):
 
 def searchMatch(query, item):
     '''return true only if query matches the item'''
-    if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower():
+    if query in item.description.lower() or query in item.name.lower():
         return True
     else:
         return False
@@ -92,9 +92,14 @@ def search(request):
         nSlides = n // 4 + ceil((n / 4) - (n // 4))
         if len(prod) != 0:
             allProds.append([prod, range(1, nSlides), nSlides])
-    params = {'allProds': allProds, "msg": ""}
+    params = {
+        'products': allProds,
+        "msg": ""
+    }
     if len(allProds) == 0 or len(query) < 4:
-        params = {'msg': "Please make sure to enter relevant search query"}
+        params = {
+            'msg': "Please make sure to enter relevant search query"
+        }
     return render(request, 'shop/search.html', params)
 
 
@@ -166,8 +171,15 @@ def checkout(request):
         state = request.POST.get('state', '')
         zip_code = request.POST.get('zip_code', '')
         phone = request.POST.get('phone', '')
-        order = Order(items_json=items_json, name=name, email=email, address=address, city=city,
-                      state=state, zip_code=zip_code, phone=phone, amount=amount)
+        order = Order(
+            items_json=items_json,
+            name=name, email=email,
+            address=address, city=city,
+            state=state,
+            zip_code=zip_code,
+            phone=phone,
+            amount=amount
+        )
         order.save()
         update = OrderUpdate(
             order_id=order.order_id,
@@ -187,7 +199,7 @@ def checkout(request):
             'INDUSTRY_TYPE_ID': 'Retail',
             'WEBSITE': 'WEBSTAGING',
             'CHANNEL_ID': 'WEB',
-            'CALLBACK_URL': 'http://127.0.0.1:8000/shop/handlerequest/',
+            'CALLBACK_URL': 'http://127.0.0.1:8000/handlerequest/',
 
         }
         # param_dict['CHECKSUMHASH'] = checksum.generate_checksum(param_dict, MERCHANT_KEY)
@@ -198,21 +210,44 @@ def checkout(request):
 
 def signup(request):
 
-    user = request.user
+    
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
-                student = form.save(commit=False)
+                user = form.save(commit=False)
                 # commit=False tells Django that "Don't send this to database yet.
-                # I have more things I want to do with it."
+                    # I have more things I want to do with it."
+                
+                # import pdb;pdb.set_trace()
+                if form.cleaned_data['type']=='Vendor':
+                    
+                    user.is_staff = True  # Set the user object here    
+                    user.save()
+                    return redirect("/admin/login") 
+                else:
+                    user.is_staff = False  
+                    user.save()
+                    return redirect("/login")  # Now you can send it to DB
 
-                student.user = request.user  # Set the user object here
-                student.save()  # Now you can send it to DB
+                
 
-                return render_to_response("registration/complete.html", RequestContext(request))
+                
+        else:
+            form = UserForm()
+            return render(
+                request,
+                'shop/signup.html',{
+                    'form':form
+                })
+
+
     else:
         form = UserForm()
-    return render(request, 'shop/login.html',)
+        return render(
+            request,
+            'shop/signup.html',{
+                'form':form
+            })
 
 
 @csrf_exempt
