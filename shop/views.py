@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, auth
-from .models import Product, Contact, Order, OrderItem
+from .models import Product, Contact,Category,Product,Order, OrderItem
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
 from math import ceil
@@ -10,22 +10,56 @@ from django.views.decorators.csrf import csrf_exempt
 # from PayTm import checksum
 # Create your views here.
 from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 MERCHANT_KEY = 'Your-Merchant-Key-Here'
 
 
-def index(request):
-    allProds = []
-    catprods = Product.objects.values('category', 'id')
-    cats = {item['category'] for item in catprods}
-    for cat in cats:
-        prod = Product.objects.filter(category=cat)
-        n = len(prod)
-        nSlides = n // 4 + ceil((n / 4) - (n // 4))
-        allProds.append([prod, range(1, nSlides), nSlides])
-    params = {'allProds': allProds}
-    return render(request, 'shop/index.html', params)
+def index(request,category_slug=None):
+    category = None
+    categories = Category.objects.all()
+    products = Product.objects.filter(available=True)
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
 
+        products = products.filter(category=category)
+    page = request.GET.get('page')
+    paginator = Paginator(products, 6)
+    try:
+        products = paginator.page(page)
+
+    except PageNotAnInteger:
+        products = paginator.page(1)
+
+    except EmptyPage:
+        products = paginator.page(1)
+
+    if request.user:
+        print(request.user)
+        pass
+        # wishlist = Wishlist.objects.filter(user=request.user)
+
+        return render(
+            request,
+            'shop/index.html',
+            {
+                'category': category,
+                'categories': categories,
+                'products': products,
+                # 'wishlist': wishlist
+            }
+        )
+
+    else:
+        return render(
+            request,
+            'shop/index.html',
+            {
+                'category': category,
+                'categories': categories,
+                'products': products,
+            }
+        )
 
 def searchMatch(query, item):
     '''return true only if query matches the item'''
