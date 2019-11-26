@@ -3,12 +3,13 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, auth
+from django.contrib.auth.models import auth
 from .models import Product, Contact, Category, Product, Order, OrderItem
 from django.contrib import messages
 from django.views.decorators.csrf import ensure_csrf_cookie
 from math import ceil
 import json
+from shop.models import User
 from django.views.decorators.csrf import csrf_exempt
 # from PayTm import checksum
 # Create your views here.
@@ -267,4 +268,13 @@ def vendor(request):
     
     menu = {}
     
-    return render(request, 'foodspark/restprofile.html', {'user':user})
+    return render(request, 'shop/restprofile.html', {'user':user})
+
+
+from django.views.generic.edit import UpdateView
+
+
+class UserUpdate(UpdateView):
+    model = User
+    fields = ['name','email','first_name','last_name']
+    template_name_suffix = '_update_form'

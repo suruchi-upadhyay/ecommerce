@@ -21,6 +21,7 @@ urlpatterns = [
     path("products/<int:myid>", views.productView, name="ProductView"),
     path("checkout/", views.checkout, name="Checkout"),
     path("handlerequest/", views.handlerequest, name="HandleRequest"),
-    path("vendorprofile",views.vendor,name='vendorprofile'),
+    # path("vendorprofile/<int:pk>",views.UserUpdate.as_view(),name='vendorprofile'),
+    path("profile/",views.vendor, name='vendorprofile'),
 
 ]
