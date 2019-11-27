@@ -44,6 +44,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         super(User, self).save(*args, **kwargs)
         return self
 
+    def __str__(self):
+        return str(self.id)
 
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
@@ -194,7 +196,7 @@ class Wishlist(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return 'wishlist of {}'.format(self.user.username)
+        return 'wishlist of {}'.format(self.user.email)
 
 
 class WishlistItem(models.Model):

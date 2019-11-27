@@ -5,33 +5,36 @@
 {% block body %}
 <div class="container my-4">
     <div class="row">
-    <div class="col-md-4">
-    <div class="row">
-        
-
-        <img width="233px" height="385px" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" class="">  
-
-    </div>
-        <div class="row">
-            <button class="btn btn-primary mx-3">Buy Now</button>
-            <button class="btn btn-primary mx-2">Add To Cart</button>
-             <button type="button" class="btn btn-secondary mx-2" id="popwishlist" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="Vivamus
-sagittis lacus vel augue laoreet rutrum faucibus.">
+        <div class="col-md-4">
+            <div class="row">
 
 
-  Wishlist(<span id="wishlist">0</span>)
-</button>
+                <img width="233px" height="385px"
+                    src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}"
+                    class="">
+
+            </div>
+            <div class="row">
+
+                <button class="btn btn-primary">Add To Cart</button>
+
+
+                <a href="{% url  'wishlist:wishlist_add' product.id %}" class="btn btn-primary mx-1">Add to Wishlist</a>
+
+
+
+                </button>
+            </div>
+
         </div>
 
-    </div>
-
-    <div class="col-md-8">
-        <h5>{{product.name}}</h5>
-        <p><b>Rs.{{product.price}} </b></p>
-        <p>{{product.description}}</p>
+        <div class="col-md-8">
+            <h5>{{product.name}}</h5>
+            <p><b>Rs.{{product.price}} </b></p>
+            <p>{{product.description}}</p>
 
 
-    </div>
+        </div>
     </div>
 
 
@@ -47,31 +50,29 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
 
 {% block js %}
 <script>
-console.log('working');
-if(localStorage.getItem('cart') == null){
-var cart = {};
-}
-else
-{
-cart = JSON.parse(localStorage.getItem('cart'));
-document.getElementById('cart').innerHTML = Object.keys(cart).length;
-}
-$('.cart').click(function(){
-console.log('clicked');
-var idstr = this.id.toString();
-console.log(idstr);
-if (cart[idstr] !=undefined){
-cart[idstr] = cart[idstr] + 1;
-}
-else
-{
-cart[idstr] = 1;
-}
-console.log(cart);
-localStorage.setItem('cart', JSON.stringify(cart));
-document.getElementById('cart').innerHTML = Object.keys(cart).length;
-});
-$('#popcart').popover();
-document.getElementById("popcart").setAttribute('data-content', '<h5>Cart for your items in my shopping cart</h5>');
+    console.log('working');
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    }
+    $('.cart').click(function () {
+        console.log('clicked');
+        var idstr = this.id.toString();
+        console.log(idstr);
+        if (cart[idstr] != undefined) {
+            cart[idstr] = cart[idstr] + 1;
+        }
+        else {
+            cart[idstr] = 1;
+        }
+        console.log(cart);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    });
+    $('#popcart').popover();
+    document.getElementById("popcart").setAttribute('data-content', '<h5>Cart for your items in my shopping cart</h5>');
 </script>
 {% endblock %}

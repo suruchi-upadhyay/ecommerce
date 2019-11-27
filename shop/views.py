@@ -206,9 +206,11 @@ def signup(request):
 
     
     if request.method == 'POST':
+        print('psot')
         form = UserForm(request.POST)
         if form.is_valid():
                 user = form.save(commit=False)
+                
                 # commit=False tells Django that "Don't send this to database yet.
                     # I have more things I want to do with it."
                 
@@ -224,18 +226,21 @@ def signup(request):
                     return redirect("/login")  # Now you can send it to DB
 
                 
-
-                
         else:
+            print('in valid vin vlaidpsot')
             form = UserForm()
+            print(form.errors)
             return render(
+                
                 request,
                 'shop/signup.html',{
-                    'form':form
+                    'form':form,
+                    'errors':form.errors
                 })
 
 
     else:
+        print('hello jasfdjlasdjfs')
         form = UserForm()
         return render(
             request,
