@@ -1,2 +1,2 @@
-# ecommerce
-an online shopping website
+# E-commerce
+An Online Shopping Website
